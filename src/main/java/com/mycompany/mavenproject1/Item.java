@@ -66,19 +66,16 @@ public class Item extends Object{
         if (this.val == 0){
             if (i.val == 1)
                 return true;
-            return false;
         }
         
         if (this.val == 1){
             if (i.val == 2)
                 return true;
-            return false;
         }
         
         if (this.val == 2){
             if (i.val == 0)
                 return true;
-            return false;
         }
         
         return false;

@@ -16,7 +16,7 @@ import java.util.Set;
  *
  * @author Павел
  */
-public class Board {
+public class Board implements IBoard {
    private HashMap<Point, Stone> Stones;
    private static HashSet<Point> checkedPoints;
    
@@ -62,6 +62,7 @@ public class Board {
        return false;
    }
            
+    @Override
     public int putStone(Stone pStone, Point pPoint){
         HashSet<Point> stoneEnv = getStoneEnvirons(pPoint);
         if(stoneEnv.size() > 2){
@@ -78,13 +79,16 @@ public class Board {
     
    }
     
+    @Override
     public int moveStone(Point oldPoint, Point newPoint){
+        if (!Stones.get(oldPoint).isMovable())
+            return 20;
         if (checkIslandRule(oldPoint)){
             HashSet<Point> stoneEnv = getStoneEnvirons(newPoint);
             if(stoneEnv.size() > 2){
                 Stone s = Stones.remove(oldPoint);
                 Stones.put(newPoint, s);
-                       
+                Stones.get(newPoint).setMovable(false);
                 if (checkWin())
                     return 111;
                 for(Point p : stoneEnv)
@@ -97,6 +101,11 @@ public class Board {
         }
         else
             return 10;
+    }
+    
+    @Override
+    public HashMap<Point, Stone> getBoard(){
+        return new HashMap<>(Stones);
     }
    
 }

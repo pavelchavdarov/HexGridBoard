@@ -53,23 +53,47 @@ public class Board {
         return true;
    }
 
-   
+   private boolean checkTowEnvirons(Point p){
+       HashSet<Point> stoneEnv = getStoneEnvirons(p);
+       return stoneEnv.size()>2;
+   }
+    
+   private boolean checkWin(){
+       return false;
+   }
+           
     public int putStone(Stone pStone, Point pPoint){
-    HashSet<Point> stoneEnv = getStoneEnvirons(pPoint);
-        if (stoneEnv.size()<2)
-        return 1;
+        HashSet<Point> stoneEnv = getStoneEnvirons(pPoint);
+        if(stoneEnv.size() > 2){
+            Stones.put(pPoint, pStone);
+            if (checkWin())
+                return 111;
+            for(Point p : stoneEnv)
+                Stones.get(p).flip(pStone);
+            if (checkWin()) return 111;
+            return 0;
+        }
+        else
+            return 1;
     
-    Stones.put(pPoint, pStone);
-    for(Point p : stoneEnv)
-        Stones.get(p).flip(pStone);
-    
-    return 0;
    }
     
     public int moveStone(Point oldPoint, Point newPoint){
         if (checkIslandRule(oldPoint)){
-            
-            return 0;
+            HashSet<Point> stoneEnv = getStoneEnvirons(newPoint);
+            if(stoneEnv.size() > 2){
+                Stone s = Stones.remove(oldPoint);
+                Stones.put(newPoint, s);
+                       
+                if (checkWin())
+                    return 111;
+                for(Point p : stoneEnv)
+                    Stones.get(p).flip(s);
+                if (checkWin()) return 111;
+                return 0;
+            }   
+            else
+                return 1;
         }
         else
             return 10;

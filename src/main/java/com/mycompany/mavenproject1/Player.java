@@ -8,13 +8,7 @@ package com.mycompany.mavenproject1;
 /**
  *
  * @author Павел
-*/    
-
-public enum Message{
-    Success,
-    Win,
-    Error_Environs,
-    Error_Island,
-    Error_Immovable
-
+ */
+public class Player {
+    
 }

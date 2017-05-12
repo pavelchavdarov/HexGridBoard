@@ -14,11 +14,19 @@ import java.util.Set;
 
 /**
  *
- * @author Павел
+ * @author РџР°РІРµР»
  */
 public class Board implements IBoard {
    private HashMap<Point, Stone> Stones;
-   private static HashSet<Point> checkedPoints;
+   //private static HashSet<Point> checkedPoints;
+
+   
+   public void StonesToPlayers(){
+       
+   }
+       
+           
+   private ArrayList<ArrayList<Stone>> players;
    
    private HashSet<Point> getStoneEnvirons(Point pPoint){
        HashSet<Point> env = pPoint.getEnvirons();
@@ -29,60 +37,60 @@ public class Board implements IBoard {
        return env;
    }
    
-   private boolean checkAstar(HashSet<Point> pp, Point p2){
-       if(pp.contains(p2)) return true;
-       //checkedPoints.addAll(pp);
-       
-       for(Point p : pp){
-           HashSet<Point> env = getStoneEnvirons(p);
-           checkedPoints.addAll(env);
-           if(checkAstar(env, p2)) return true;    
-           
-       }
-       return false;
-   }
-   
+//   private boolean checkAstar(HashSet<Point> pp, Point p2){
+//       if(pp.contains(p2)) return true;
+//       //checkedPoints.addAll(pp);
+//       
+//       for(Point p : pp){
+//           HashSet<Point> env = getStoneEnvirons(p);
+//           checkedPoints.addAll(env);
+//           if(checkAstar(env, p2)) return true;    
+//           
+//       }
+//       return false;
+//   }
+// переделать!   
    private boolean checkIslandRule(Point p){
-        ArrayList<Point> envStones = new ArrayList<>(getStoneEnvirons(p));
-        for(int i = 0; i <envStones.size(); i++ )
-            for(int j = i+1; i <envStones.size(); j++ ){
-                checkedPoints.clear();
-                checkedPoints.add(envStones.get(i));
-                return checkAstar(checkedPoints,envStones.get(j));
-            }
+//        ArrayList<Point> envStones = new ArrayList<>(getStoneEnvirons(p));
+//        for(int i = 0; i <envStones.size(); i++ )
+//            for(int j = i+1; i <envStones.size(); j++ ){
+//                checkedPoints.clear();
+//                checkedPoints.add(envStones.get(i));
+//                return checkAstar(checkedPoints,envStones.get(j));
+//            }
         return true;
    }
 
-   private boolean checkTowEnvirons(Point p){
-       HashSet<Point> stoneEnv = getStoneEnvirons(p);
-       return stoneEnv.size()>2;
-   }
+//   private boolean checkTowEnvirons(Point p){
+//       HashSet<Point> stoneEnv = getStoneEnvirons(p);
+//       return stoneEnv.size()>2;
+//   }
     
    private boolean checkWin(){
        return false;
    }
            
     @Override
-    public int putStone(Stone pStone, Point pPoint){
+    public Message putStone(Stone pStone, Point pPoint){
         HashSet<Point> stoneEnv = getStoneEnvirons(pPoint);
         if(stoneEnv.size() > 2){
             Stones.put(pPoint, pStone);
             if (checkWin())
-                return 111;
+                return Message.Win;
             for(Point p : stoneEnv)
                 Stones.get(p).flip(pStone);
-            if (checkWin()) return 111;
-            return 0;
+            if (checkWin()) return Message.Win;
+            return Message.Success;
         }
         else
-            return 1;
+            return Message.Error_Environs;
     
    }
     
     @Override
-    public int moveStone(Point oldPoint, Point newPoint){
+    public Message moveStone(Point oldPoint, Point newPoint){
         if (!Stones.get(oldPoint).isMovable())
-            return 20;
+            return Message.Error_Immovable;
         if (checkIslandRule(oldPoint)){
             HashSet<Point> stoneEnv = getStoneEnvirons(newPoint);
             if(stoneEnv.size() > 2){
@@ -90,17 +98,17 @@ public class Board implements IBoard {
                 Stones.put(newPoint, s);
                 Stones.get(newPoint).setMovable(false);
                 if (checkWin())
-                    return 111;
+                    return Message.Win;
                 for(Point p : stoneEnv)
                     Stones.get(p).flip(s);
-                if (checkWin()) return 111;
-                return 0;
+                if (checkWin()) return Message.Win;
+                return Message.Success;
             }   
             else
-                return 1;
+                return Message.Error_Environs;
         }
         else
-            return 10;
+            return Message.Error_Island;
     }
     
     @Override

@@ -5,18 +5,16 @@
  */
 package com.mycompany.mavenproject1;
 
-import java.util.HashMap;
-
 /**
  *
  * @author Павел
  */
-public interface IBoard {
+public interface IPouch {
 
-    HashMap<Point, Stone> getBoard();
+    Stone handOutStone();
 
-    Message moveStone(Point oldPoint, Point newPoint);
+    void init();
 
-    Message putStone(Stone pStone, Point pPoint);
+    void shuffle();
     
 }

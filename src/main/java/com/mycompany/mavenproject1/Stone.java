@@ -13,11 +13,11 @@ import java.util.ArrayList;
  */
 public class Stone {
 
-    public static Stone create(Item SideA, Item SideB) {
+    public static Stone create(Entity SideA, Entity SideB) {
         return new Stone(SideA, SideB);
     }
-    private Item face;
-    private Item back;
+    private Entity face;
+    private Entity back;
     private boolean movable;
 
     public boolean isMovable() {
@@ -29,7 +29,7 @@ public class Stone {
     }
     
 
-    private Stone(Item SideA, Item SideB) {
+    private Stone(Entity SideA, Entity SideB) {
         face = SideA;
         back = SideB;
         movable = true;
@@ -37,13 +37,22 @@ public class Stone {
 
     
     
-    public Item getFace() {
+    public Entity getFace() {
         return face;
     }
     
     public void flip(Stone pStone){
-        if(pStone.face.dominate(this.face)){
-            Item dummy = pStone.face;
+        boolean toFlip = false;
+        if((pStone.getFace() == Entity.Stone && this.getFace() == Entity.Scissors)
+            ||
+            (pStone.getFace() == Entity.Scissors && this.getFace() == Entity.Paper)
+            ||
+            (pStone.getFace() == Entity.Paper && this.getFace() == Entity.Stone)    
+        )
+            toFlip = true;
+        
+        if(toFlip == true){
+            Entity dummy = pStone.face;
             pStone.face = pStone.back;
             pStone.back = dummy;
         }
